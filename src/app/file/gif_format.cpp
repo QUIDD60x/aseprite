@@ -561,18 +561,31 @@ private:
     // sprite palette.
     int found = 0;
     if (m_frameNum > 0) {
-      for (int i=0; i<ncolors; ++i) {
-        if (!usedEntries[i])
-          continue;
+      ColorMapObject* globalCMap = m_gifFile->SColorMap;
+      ColorMapObject* localCMap = m_gifFile->Image.ColorMap;
+      if (globalCMap && !localCMap)
+        found = usedEntries.size();
+      else {
+        for (int i=0; i<ncolors; ++i) {
+          if (!usedEntries[i])
+            continue;
 
-        int j = palette->findExactMatch(
-          colormap->Colors[i].Red,
-          colormap->Colors[i].Green,
-          colormap->Colors[i].Blue, 255,
-          (m_opaque ? -1: m_bgIndex));
-        if (j >= 0) {
-          m_remap.map(i, j);
-          ++found;
+          if (localCMap && i < localCMap->ColorCount &&
+              rgba(localCMap->Colors[i].Red,
+                   localCMap->Colors[i].Green,
+                   localCMap->Colors[i].Blue, 256) == palette->getEntry(i)) {
+            ++found;
+            continue;
+          }
+
+          int j = palette->findExactMatch(colormap->Colors[i].Red,
+                                          colormap->Colors[i].Green,
+                                          colormap->Colors[i].Blue, 256,
+                                          (m_opaque ? -1: m_bgIndex));
+          if (j >= 0) {
+            m_remap.map(i, j);
+            ++found;
+          }
         }
       }
     }
