@@ -34,6 +34,7 @@ namespace app {
     bool onMouseWheel(Editor* editor, ui::MouseMessage* msg) override;
     bool onTouchMagnify(Editor* editor, ui::TouchMessage* msg) override;
     bool onSetCursor(Editor* editor, const gfx::Point& mouseScreenPos) override;
+    bool isWheelBehaviorState() override { return true; };
 
   protected:
     void processWheelAction(Editor* editor,

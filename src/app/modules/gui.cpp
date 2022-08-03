@@ -634,6 +634,12 @@ bool CustomizedGuiManager::onProcessMessage(Message* msg)
             case KeyType::Command: {
               Command* command = key->command();
 
+              // If the current state has a wheel behavior, its needed to cancel it
+              // to avoid returning to the wheel behavior after dialog/command ends
+              if (current_editor &&
+                  current_editor->getState() &&
+                  current_editor->getState()->isWheelBehaviorState())
+                current_editor->getState()->onKeyUp(current_editor, static_cast<KeyMessage*>(msg));
               // Commands are executed only when the main window is
               // the current window running.
               if (getForegroundWindow() == App::instance()->mainWindow()) {

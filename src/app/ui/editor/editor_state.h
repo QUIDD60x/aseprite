@@ -1,5 +1,5 @@
 // Aseprite
-// Copyright (C) 2019-2020  Igara Studio S.A.
+// Copyright (C) 2019-2022  Igara Studio S.A.
 // Copyright (C) 2001-2016  David Capello
 //
 // This program is distributed under the terms of
@@ -139,6 +139,10 @@ namespace app {
     // Used to adjust the grid origin point for temporal cels created
     // by states like DrawingState + ExpandCelCanvas.
     virtual bool getGridBounds(Editor* editor, gfx::Rect& gridBounds) { return false; }
+
+    // Used to identify if we need to cancel a StateWithWheelBehavior before to
+    // enter a command/dialog window.
+    virtual bool isWheelBehaviorState() { return false; };
 
   private:
     DISABLE_COPYING(EditorState);
